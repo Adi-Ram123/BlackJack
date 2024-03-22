@@ -11,8 +11,15 @@ public class Frame extends JFrame implements ActionListener
     private JPanel titlePanel;
     private JButton newRound;
     private JPanel mainPanel;
+    private JPanel dealerBar;
+    private JLabel dealerTotal;
+    private JPanel profitBar;
+    private JLabel profit;
     private JLabel msg;
     private JTextField status;
+
+    private ImageIcon back;
+    private ImageIcon A;
 
     public Frame(String frameName)
     {
@@ -28,11 +35,13 @@ public class Frame extends JFrame implements ActionListener
         mainPanel = new JPanel();
         mainPanel.setEnabled(false);
         mainPanel.setVisible(false);
+        loadImages();
         createTitle();
+        
 
     }
 
-    public void createTitle() {
+    private void createTitle() {
         //Display title at start
         titlePanel.setBackground(new Color(78, 106, 84));
         titlePanel.setLayout(null);
@@ -54,13 +63,72 @@ public class Frame extends JFrame implements ActionListener
 
     }
 
-    public void mainPanel() {
+    private void loadImages() {
+        back = new ImageIcon("Assets\\back.png");
+        A = new ImageIcon("Assets\\A.png");
+    }
+
+    private JLabel drawCard(int x, int y, int width, int height, String name) {
+        JLabel card = new JLabel();
+
+        switch(name) {
+            case "back":
+                card.setIcon(back);
+                break;
+            case "A":
+                card.setIcon(A);
+                break;
+        }
+
+        card.setBounds(x, y, width, height);
+        card.setBorder(BorderFactory.createEtchedBorder());
+        System.out.println(x + ", " + y);
+
+        return card;
+
+    }
+
+    private void mainPanel() {
         mainPanel.setBackground(new Color(78, 106, 84));
         mainPanel.setLayout(null);
         
-        
-        
-        
+
+        //Dealer Total
+        dealerTotal = new JLabel("Total: S16");
+        dealerTotal.setFont(new Font("Arial", Font.PLAIN, 30));
+        dealerTotal.setForeground(Color.BLACK);
+        dealerTotal.setBounds(20, 30, frame.getWidth()/4, 50);
+        mainPanel.add(dealerTotal);
+
+        //Dealer bar
+        dealerBar = new JPanel();
+        dealerBar.setBackground(Color.WHITE);
+        dealerBar.setBounds(0, 0, frame.getWidth()/4 - 50, 125);
+        mainPanel.add(dealerBar);
+
+        //Dealer cards
+        JLabel open = drawCard(3 * frame.getWidth()/4 - 150, 20, 150, 200, "A");
+        JLabel faceDown = drawCard(3 * frame.getWidth()/4 - 310, 20, 150, 200, "back");
+        mainPanel.add(faceDown);
+        mainPanel.add(open);
+
+        //Profit
+        profit = new JLabel("Profit: $9999");
+        profit.setFont(new Font("Arial", Font.PLAIN, 30));
+        profit.setForeground(new Color(35, 158, 55));
+        profit.setBounds(1300, 30, frame.getWidth()/4, 50);
+        mainPanel.add(profit);
+
+        //Profit Bar
+        profitBar = new JPanel();
+        profitBar.setBackground(Color.WHITE);
+        profitBar.setBounds(3 * frame.getWidth()/4 + 50, 0, frame.getWidth()/4 - 50, 125);
+        mainPanel.add(profitBar);
+
+
+
+
+
         //Status msg
         msg = new JLabel("Double Down (y or n):");
         msg.setFont(new Font("Arial", Font.PLAIN, 30));
@@ -74,6 +142,7 @@ public class Frame extends JFrame implements ActionListener
         status.setForeground(Color.BLACK);
         status.setMargin(new Insets(5, 5, 5, 5));
         status.setBounds(frame.getWidth()/4, frame.getHeight()-110, 3* frame.getWidth()/4 - 50, 50);
+        status.addActionListener(this);
         mainPanel.add(status);
         
         //Status bar
@@ -97,7 +166,11 @@ public class Frame extends JFrame implements ActionListener
             titlePanel.setVisible(false);
             mainPanel();
             System.out.println("Selected New Round");
-        } 
+        }
+        
+        if(e.getSource() == status) {
+            msg.setText(status.getText() + ": ");
+        }
     }
 
     
